@@ -8,15 +8,15 @@ Setup for reproducing Freenet's 1481 OOM error.
 
 - Install freenet somewhere, ex: `/opt/freenet`
 - Setup the environment variable `FREENET_ROOT` pointing to this directory, ex: `export FREENET_ROOT=/opt/freenet`
-- Configure the node
+- Start and configure the node
 - Shutdown the node and make a copy (in order to try out clean each time)
   - `cp -r /opt/freenet /opt/freenet-clean`
 
 ### Build from source
 
 - Clone from `https://github.com/freenet/fred`
-- Copy Makefile-fred to it: `cp Makefile-fred /path/to/fred/Make`
-- Build from source and link: `make build` / `make reset` / `make link`
+- Copy `Makefile-fred` file to it: `cp Makefile-fred /path/to/fred/Make`
+- Build from source and link: `make build; make reset; make link`
 
 ## Workflow
 
