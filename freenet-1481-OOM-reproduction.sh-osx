@@ -1,0 +1,40 @@
+#wget https://github.com/freenet/fred/releases/download/build01481/new_installer_offline_1481.jar
+#java -jar new_installer_offline_1481.jar
+# click through the setup wizard and the in-browser first-run wizard, give Freenet high upload bandwidth (i.e. 164kiB/s)
+
+# give freenet time to start the FCP server
+#sleep 180
+
+# prepare a file to upload
+INSERTFILE="$(mktemp /tmp/insert.temp.XXXXXXXXXX)"
+head -c 100000000 < /dev/urandom > "$INSERTFILE"
+IDENT=testupload"${INSERTFILE##*.}"
+
+# prepare the command to connect to freenet and upload the file
+# connect with HELLO
+TEMPFILE="$(mktemp /tmp/insert.temp.XXXXXXXXXX)"
+echo ClientHello > $TEMPFILE
+echo "Name=Upload-Test${INSERTFILE##*.}" >> $TEMPFILE
+echo ExpectedVersion=2 >> $TEMPFILE
+echo End >> $TEMPFILE
+echo >> $TEMPFILE
+
+# upload with ClientPut
+echo ClientPut >> $TEMPFILE
+echo "DontCompress=true" >> $TEMPFILE
+echo "URI=CHK@/testupload" >> $TEMPFILE
+echo "Identifier=$IDENT" >> $TEMPFILE
+echo MaxRetries=-1 >> $TEMPFILE
+echo UploadFrom=direct >> $TEMPFILE
+echo DataLength=$(ls -l $INSERTFILE | cut -d " " -f8) >> $TEMPFILE
+echo Persistence=forever >> $TEMPFILE
+echo Global=true >> $TEMPFILE
+echo End >> $TEMPFILE
+cat $INSERTFILE >> $TEMPFILE
+
+# run the insert
+(cat $TEMPFILE | nc 127.0.0.1 9481) &
+echo "Done"
+# watch how long the node lives
+#for i in {1..1000}; do curl 'http://127.0.0.1:8888/stats/?fproxyAdvancedMode=2' 2>/dev/null | grep -io nodeUptimeSession.*'<' | grep -io '[^;]*s<' | grep -io '.*s' ; curl 'http://127.0.0.1:8888/stats/?fproxyAdvancedMode=2' 2>/dev/null | grep -io '[^>]* java memory.*&' | grep -io '[^&]*'; sleep 5; done
+

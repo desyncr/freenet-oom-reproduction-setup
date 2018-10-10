@@ -1,0 +1,18 @@
+.PHONY: build
+FREENET_ROOT ?=/Applications/Freenet
+FREENET_BASE ?=/Applications/Freenet-base
+
+help:
+	echo "make build; make reset; make link"
+build:
+	gradle clean
+	gradle build jar -x test
+	./gradlew copyRuntimeLib
+link:
+	cp build/output/freenet.jar ${FREENET_ROOT}
+	cp build/output/freenet-ext-29.jar ${FREENET_ROOT}/freenet-ext.jar
+	cp build/output/jna-4.2.2.jar ${FREENET_ROOT}
+	cp build/output/jna-platform-4.2.2.jar ${FREENET_ROOT}
+reset:
+	rm -rf ${FREENET_ROOT}
+	cp -r ${FREENET_BASE} ${FREENET_ROOT}
