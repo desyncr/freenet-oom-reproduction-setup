@@ -1,8 +1,8 @@
 # Setup
 
-Setup for reproducing Freenet's 1481 OOM error.
+Setup to reproduce Freenet's 1481 OOM error.
 
-## Intructions
+## Instructions
 
 ### Setup a node
 
@@ -15,7 +15,7 @@ Setup for reproducing Freenet's 1481 OOM error.
 ### Build from source
 
 - Clone from `https://github.com/freenet/fred`
-- Copy `Makefile-fred` file to it: `cp Makefile-fred /path/to/fred/Make`
+- Copy `Makefile-fred` file to the clone's path: `cp Makefile-fred /path/to/fred/Make`
 - Build from source and link: `make build; make reset; make link`
 
 ## Workflow
